@@ -14,6 +14,8 @@ app.config["SESSION_TYPE"] = 'filesystem'
 app.config["SESSION_PERMANENT"] = 'False'
 Session(app)
 
+
+
 OPEN_AI_MODEL = "gpt-3.5-turbo"
 MAX_TOKENS = 100
 def get_chat_message_exact(query):
@@ -24,31 +26,14 @@ def get_chat_message_exact(query):
         }
     ]
 
-def get_chat_message(query, previous_chat):
-    messages = []
-
-    if previous_chat:
-        for message in previous_chat:
-            messages.append({
-                "role": message['role'],
-                "content": message['content']
-            })
-
-    messages.append({
-        "role": "user",
-        "content": query
-    })
-
-    return messages
-
-
 
 OPEN_API_KEY = os.getenv("OPENAI_API_KEY")
 OPEN_API_URL = "https://api.openai.com/v1/chat/completions"
 
-@app.route("/openai-response", methods = ["POST"])
+@app.route("/openairesponse", methods=["POST"])  # Changed to POST
 def get_openai_response():
-    data = request.json
+    # Assuming the client sends data in JSON format
+    data = request.get_json()  # Use get_json() instead of request.json
 
     query = data.get('query')
     previous_chat = data.get('previous_chat')
